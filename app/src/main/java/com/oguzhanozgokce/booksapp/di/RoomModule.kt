@@ -2,8 +2,7 @@ package com.oguzhanozgokce.booksapp.di
 
 import android.content.Context
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import com.oguzhanozgokce.booksapp.data.repo.BookBasketDB
+import com.oguzhanozgokce.booksapp.data.room.BookBasketDB
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

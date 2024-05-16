@@ -7,11 +7,9 @@ import retrofit2.http.GET
 import retrofit2.http.Header
 
 interface BooksServes {
-
     @GET("newBook")
     suspend fun getBooks(
         @Header("Content-Type") contentType: String = "application/json",
         @Header("Authorization") apiKey: String = "apikey $API_KEY"
-        ): Response<Book>
-
+    ): Book
 }
