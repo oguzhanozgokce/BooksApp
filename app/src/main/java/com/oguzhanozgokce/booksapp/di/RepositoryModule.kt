@@ -2,7 +2,7 @@ package com.oguzhanozgokce.booksapp.di
 
 import com.oguzhanozgokce.booksapp.data.api.BooksServes
 import com.oguzhanozgokce.booksapp.data.repo.BookRepository
-import com.oguzhanozgokce.booksapp.data.room.BookBasketDao
+import com.oguzhanozgokce.booksapp.data.room.BookDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +16,7 @@ class RepositoryModule {
     @Provides
     fun provideBookRepository(
         bookServes: BooksServes,
-        booksDao : BookBasketDao, ): BookRepository {
+        booksDao : BookDao, ): BookRepository {
         return BookRepository(bookServes, booksDao)
     }
 }

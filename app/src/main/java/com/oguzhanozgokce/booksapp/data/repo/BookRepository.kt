@@ -1,44 +1,67 @@
 package com.oguzhanozgokce.booksapp.data.repo
 
-import android.util.Log
-import com.bumptech.glide.load.engine.Resource
+import androidx.lifecycle.LiveData
 import com.oguzhanozgokce.booksapp.data.api.BooksServes
-import com.oguzhanozgokce.booksapp.data.model.Book
-import com.oguzhanozgokce.booksapp.data.model.BookBasket
-import com.oguzhanozgokce.booksapp.data.model.Result
-import com.oguzhanozgokce.booksapp.data.room.BookBasketDao
-import kotlin.math.log
-import kotlin.math.truncate
+import com.oguzhanozgokce.booksapp.data.room.BookEntity
+import com.oguzhanozgokce.booksapp.data.room.BookDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class BookRepository(
+class BookRepository @Inject constructor(
     private val bookApi: BooksServes,
-    private val bookBasketDao: BookBasketDao
+    private val bookDao: BookDao
 ) {
-    suspend fun getBooks(): List<Result> {
+
+    suspend fun fetchBooksFromApi(): Result<List<BookEntity>> {
         return try {
-            val book = bookApi.getBooks()
-            book.result.let { resultList ->
-                val bookBaskets = resultList.map { result ->
-                    BookBasket(
-                        title = result.title,
-                        yazar = result.yazar,
-                        yayin = result.yayın,
-                        fiyat = result.fiyat,
-                        indirim = result.indirim,
-                        image = result.image,
-                        url = result.url
-                    )
-                }
-                bookBasketDao.addBooks(bookBaskets)
-                Log.e("BookRepository", "Received ${resultList.size} books from the API")
-                Log.e("BookRepository", "Books successfully saved to Room")
-                resultList
+            val response = bookApi.getBooks()
+            if (response.isSuccessful) {
+                response.body()?.let { bookResponse ->
+                    val bookEntities = bookResponse.result.map { result ->
+                        BookEntity(
+                            fiyat = result.fiyat,
+                            image = result.image,
+                            indirim = result.indirim,
+                            title = result.title,
+                            url = result.url,
+                            yayin = result.yayın,
+                            yazar = result.yazar
+                        )
+                    }
+                    bookDao.insertBooks(bookEntities)
+                    Result.success(bookEntities)
+                } ?: Result.failure(Exception("Response body is null"))
+            } else {
+                Result.failure(Exception("Failed to fetch books: ${response.message()}"))
             }
         } catch (e: Exception) {
-            Log.e("BookRepository", "Error on fetching books from the API", e)
-            emptyList()
+            Result.failure(e)
         }
     }
 
-    fun getBooksFromDatabase() = bookBasketDao.getBookBasket()
+    fun getAllBooks(): LiveData<List<BookEntity>> {
+        return bookDao.getAllBooks()
+    }
+
+    fun getFavoriteBooks(): LiveData<List<BookEntity>> {
+        return bookDao.getFavoriteBooks()
+    }
+
+    suspend fun updateBook(book: BookEntity) {
+        withContext(Dispatchers.IO) {
+            bookDao.updateBook(book)
+        }
+    }
+
+    /**
+     * Verilen kitabı veritabanından siler.
+     */
+    suspend fun deleteBook(book: BookEntity) {
+        withContext(Dispatchers.IO) {
+            bookDao.deleteBook(book)
+        }
+    }
 }
+
+

@@ -2,7 +2,7 @@ package com.oguzhanozgokce.booksapp.di
 
 import android.content.Context
 import androidx.room.Room
-import com.oguzhanozgokce.booksapp.data.room.BookBasketDB
+import com.oguzhanozgokce.booksapp.data.room.BookDB
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,10 +18,10 @@ class RoomModule {
     @Singleton
     fun provideRoomDatabase(
         @ApplicationContext context: Context
-    ): BookBasketDB {
+    ): BookDB {
         return Room.databaseBuilder(
             context,
-            BookBasketDB::class.java,
+            BookDB::class.java,
             "book_basket_database.db"
         ).build()
     }
@@ -29,6 +29,6 @@ class RoomModule {
     @Provides
     @Singleton
     fun provideBookBasketDao(
-        db: BookBasketDB
+        db: BookDB
     ) = db.bookBasketDaoInstance()
 }

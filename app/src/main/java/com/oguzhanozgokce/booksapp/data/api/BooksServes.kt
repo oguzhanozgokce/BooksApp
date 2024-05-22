@@ -11,5 +11,5 @@ interface BooksServes {
     suspend fun getBooks(
         @Header("Content-Type") contentType: String = "application/json",
         @Header("Authorization") apiKey: String = "apikey $API_KEY"
-    ): Book
+    ): Response<Book>
 }
