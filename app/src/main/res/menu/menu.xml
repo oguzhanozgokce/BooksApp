@@ -4,10 +4,12 @@
     <item
         android:id="@+id/booksFragment"
         android:title="Home"
+        android:titleTextAppearance="@style/BottomNavTextStyle"
         android:icon="@drawable/baseline_menu_book_24"
         />
     <item
         android:id="@+id/bookFavoritesFragment"
         android:title="Favourites"
+        android:titleTextAppearance="@style/BottomNavTextStyle"
         android:icon="@drawable/baseline_favorite_24"/>
 </menu>

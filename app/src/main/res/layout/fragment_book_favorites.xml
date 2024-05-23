@@ -3,17 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/dark_blue"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.favorite.BookFavoritesFragment">
 
 
-    <ImageView
+    <TextView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:contentDescription="My Favorite Book"
-        android:src="@drawable/my_favorite_book"
+        android:layout_height="80dp"
+        android:text="~ My Favorite Books ~"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

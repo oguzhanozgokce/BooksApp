@@ -18,13 +18,6 @@ class RoomModule {
 
     val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
-            // Eğer sadece `id` sütunu nullable'dan non-nullable yapıldıysa,
-            // bu sütunun varsayılan değeri için gerekli SQL'i ekleyin.
-            // Bu örnekte `id` sütununun 0 olması gerektiğini varsayıyoruz.
-
-            // DİKKAT: Bu adımı mevcut verileri koruyarak yapmak karmaşık olabilir,
-            // çünkü Room migration işlemlerinde mevcut tablolara müdahale etmez.
-            // Bunun yerine, geçici bir tablo oluşturabilir ve veri taşınmasını sağlayabilirsiniz.
 
         }
     }
@@ -39,9 +32,10 @@ class RoomModule {
             BookDB::class.java,
             "book_basket_database.db"
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(MIGRATION_1_2) // Add migrations here
             .build()
     }
+
 
     @Provides
     @Singleton
