@@ -1,5 +1,6 @@
 package com.oguzhanozgokce.booksapp.ui.books
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,8 +16,7 @@ class BooksViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
 
-    private val _books = MutableLiveData<List<BookEntity>>()
-    val books: LiveData<List<BookEntity>> get() = _books
+    val books: LiveData<List<BookEntity>> = repository.getAllBooks()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -28,15 +28,14 @@ class BooksViewModel @Inject constructor(
         fetchBooks()
     }
 
-    // API'den kitapları çekip Room veritabanına ekleyen fonksiyon
-     fun fetchBooks() {
+    fun fetchBooks() {
         _isLoading.value = true
         viewModelScope.launch {
             val result = repository.fetchBooksFromApi()
             result.fold(
                 onSuccess = { bookList ->
-                    _books.value = bookList
                     _isLoading.value = false
+                    // Books LiveData is observed, no need to manually update it here
                 },
                 onFailure = { exception ->
                     _error.value = exception.message

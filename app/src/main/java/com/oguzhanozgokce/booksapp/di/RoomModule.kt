@@ -2,6 +2,8 @@ package com.oguzhanozgokce.booksapp.di
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.oguzhanozgokce.booksapp.data.room.BookDB
 import dagger.Module
 import dagger.Provides
@@ -14,6 +16,19 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RoomModule {
 
+    val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Eğer sadece `id` sütunu nullable'dan non-nullable yapıldıysa,
+            // bu sütunun varsayılan değeri için gerekli SQL'i ekleyin.
+            // Bu örnekte `id` sütununun 0 olması gerektiğini varsayıyoruz.
+
+            // DİKKAT: Bu adımı mevcut verileri koruyarak yapmak karmaşık olabilir,
+            // çünkü Room migration işlemlerinde mevcut tablolara müdahale etmez.
+            // Bunun yerine, geçici bir tablo oluşturabilir ve veri taşınmasını sağlayabilirsiniz.
+
+        }
+    }
+
     @Provides
     @Singleton
     fun provideRoomDatabase(
@@ -23,7 +38,9 @@ class RoomModule {
             context,
             BookDB::class.java,
             "book_basket_database.db"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
 
     @Provides

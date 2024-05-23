@@ -37,7 +37,6 @@ class BooksFragment : Fragment() {
         binding.recyclerView.apply {
             adapter = booksAdapter
             layoutManager = GridLayoutManager(requireContext(),2)
-            addItemDecoration(DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL))
         }
 
         // Kitap verilerini gözlemleyin

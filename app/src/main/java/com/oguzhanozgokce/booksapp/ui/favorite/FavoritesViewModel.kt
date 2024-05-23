@@ -9,13 +9,14 @@ import com.oguzhanozgokce.booksapp.data.repo.BookRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 @HiltViewModel
 class FavoritesViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
 
-    private val _favoriteBooks = MutableLiveData<List<BookEntity>?>()
-    val favoriteBooks: MutableLiveData<List<BookEntity>?> get() = _favoriteBooks
+    private val _favoriteBooks = MutableLiveData<List<BookEntity>>()
+    val favoriteBooks: LiveData<List<BookEntity>> get() = _favoriteBooks
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -31,9 +32,13 @@ class FavoritesViewModel @Inject constructor(
     private fun fetchFavoriteBooks() {
         _isLoading.value = true
         viewModelScope.launch {
-            val favoriteBooksList = repository.getFavoriteBooks().value // LiveData<List<BookEntity>>'yi alın
-            _favoriteBooks.value = favoriteBooksList // LiveData<List<BookEntity>>'yi _favoriteBooks'a ata
-            _isLoading.value = false
+            try {
+                _favoriteBooks.value = repository.getFavoriteBooks().value
+            } catch (e: Exception) {
+                _error.value = e.message
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
@@ -44,4 +49,3 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 }
-

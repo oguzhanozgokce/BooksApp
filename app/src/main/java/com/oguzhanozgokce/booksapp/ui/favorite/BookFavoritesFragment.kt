@@ -8,11 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
-import com.oguzhanozgokce.booksapp.R
 import com.oguzhanozgokce.booksapp.databinding.FragmentBookFavoritesBinding
-import com.oguzhanozgokce.booksapp.databinding.FragmentBooksBinding
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class BookFavoritesFragment : Fragment() {
@@ -25,7 +22,6 @@ class BookFavoritesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentBookFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -53,7 +49,12 @@ class BookFavoritesFragment : Fragment() {
 
         // Yükleme durumu gözlemleme işlemi
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-           binding.progressBarId.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBarId.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

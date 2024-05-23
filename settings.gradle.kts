@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "BooksApp"
 include(":app")
- 
+include(":mylibrary")

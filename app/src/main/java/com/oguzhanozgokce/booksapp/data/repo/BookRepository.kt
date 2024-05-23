@@ -1,5 +1,6 @@
 package com.oguzhanozgokce.booksapp.data.repo
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.oguzhanozgokce.booksapp.data.api.BooksServes
 import com.oguzhanozgokce.booksapp.data.room.BookEntity
@@ -7,12 +8,10 @@ import com.oguzhanozgokce.booksapp.data.room.BookDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
 class BookRepository @Inject constructor(
     private val bookApi: BooksServes,
     private val bookDao: BookDao
 ) {
-
     suspend fun fetchBooksFromApi(): Result<List<BookEntity>> {
         return try {
             val response = bookApi.getBooks()
@@ -29,7 +28,9 @@ class BookRepository @Inject constructor(
                             yazar = result.yazar
                         )
                     }
+                    Log.e("BookRepository", "Fetched books: $bookEntities")
                     bookDao.insertBooks(bookEntities)
+                    Log.e("BookRepository", "Books inserted into DB")
                     Result.success(bookEntities)
                 } ?: Result.failure(Exception("Response body is null"))
             } else {
@@ -39,6 +40,9 @@ class BookRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+
+
 
     fun getAllBooks(): LiveData<List<BookEntity>> {
         return bookDao.getAllBooks()
