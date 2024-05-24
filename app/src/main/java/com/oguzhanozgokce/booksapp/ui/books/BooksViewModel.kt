@@ -24,6 +24,9 @@ class BooksViewModel @Inject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
+    private val _limitedBooks = MutableLiveData<List<BookEntity>>()
+    val limitedBooks: LiveData<List<BookEntity>> get() = _limitedBooks
+
     init {
         fetchBooks()
     }
@@ -35,7 +38,6 @@ class BooksViewModel @Inject constructor(
             result.fold(
                 onSuccess = { bookList ->
                     _isLoading.value = false
-                    // Books LiveData is observed, no need to manually update it here
                 },
                 onFailure = { exception ->
                     _error.value = exception.message
@@ -45,7 +47,18 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    // Veritabanındaki tüm kitapları dönen fonksiyon
+    fun getLimitedBooks(limit: Int) {
+        _isLoading.value = true
+        viewModelScope.launch {
+            repository.getLimitedBooks(limit).observeForever { books ->
+                _limitedBooks.value = books
+                _isLoading.value = false
+                Log.d("BooksViewModel", "Limited books size: ${books.size}")
+            }
+        }
+    }
+
+
     fun getAllBooks(): LiveData<List<BookEntity>> {
         return repository.getAllBooks()
     }

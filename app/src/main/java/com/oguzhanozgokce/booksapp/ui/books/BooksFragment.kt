@@ -29,28 +29,21 @@ class BooksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Kitapları listelemek için RecyclerView oluşturun
         booksAdapter = BookAdapter { book ->
-            // Favoriye ekleme veya çıkarma işlemi burada yapılacak
             viewModel.toggleFavorite(book)
         }
         binding.recyclerView.apply {
             adapter = booksAdapter
             layoutManager = GridLayoutManager(requireContext(),2)
         }
-
-        // Kitap verilerini gözlemleyin
-        viewModel.books.observe(viewLifecycleOwner) { books ->
+        viewModel.limitedBooks.observe(viewLifecycleOwner) { books ->
             booksAdapter.submitList(books)
         }
-
-        // Yüklenme durumunu gözlemleyin
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
+        viewModel.getLimitedBooks(50)
 
-
-        viewModel.fetchBooks()
     }
 
 }

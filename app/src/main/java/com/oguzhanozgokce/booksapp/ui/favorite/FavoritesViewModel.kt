@@ -15,8 +15,7 @@ class FavoritesViewModel @Inject constructor(
     private val repository: BookRepository
 ) : ViewModel() {
 
-    private val _favoriteBooks = MutableLiveData<List<BookEntity>>()
-    val favoriteBooks: LiveData<List<BookEntity>> get() = _favoriteBooks
+    val favoriteBooks: LiveData<List<BookEntity>> = repository.getFavoriteBooks()
 
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> get() = _isLoading
@@ -24,16 +23,11 @@ class FavoritesViewModel @Inject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    init {
-        fetchFavoriteBooks()
-    }
-
-    // Favori kitapları getiren fonksiyon
-    private fun fetchFavoriteBooks() {
-        _isLoading.value = true
+    fun removeFavoriteBook(book: BookEntity) {
         viewModelScope.launch {
             try {
-                _favoriteBooks.value = repository.getFavoriteBooks().value
+                _isLoading.value = true
+                repository.deleteBook(book)
             } catch (e: Exception) {
                 _error.value = e.message
             } finally {
@@ -42,10 +36,4 @@ class FavoritesViewModel @Inject constructor(
         }
     }
 
-    // Favori kitaptan çıkaran fonksiyon
-    fun removeFavoriteBook(book: BookEntity) {
-        viewModelScope.launch {
-            repository.deleteBook(book)
-        }
-    }
 }

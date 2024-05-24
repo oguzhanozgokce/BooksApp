@@ -30,7 +30,6 @@ class BookRepository @Inject constructor(
                     }
                     Log.e("BookRepository", "Fetched books: $bookEntities")
                     bookDao.insertBooks(bookEntities)
-                    Log.e("BookRepository", "Books inserted into DB")
                     Result.success(bookEntities)
                 } ?: Result.failure(Exception("Response body is null"))
             } else {
@@ -41,8 +40,13 @@ class BookRepository @Inject constructor(
         }
     }
 
-
-
+    fun getLimitedBooks(limit: Int): LiveData<List<BookEntity>> {
+        val booksLiveData = bookDao.getLimitedBooks(limit)
+        booksLiveData.observeForever { books ->
+            Log.d("BookRepository", "Fetched limited books: ${books.size}")
+        }
+        return booksLiveData
+    }
 
     fun getAllBooks(): LiveData<List<BookEntity>> {
         return bookDao.getAllBooks()

@@ -20,6 +20,10 @@ interface BookDao {
     @Query("SELECT * FROM book_basket_database")
     fun getAllBooks(): LiveData<List<BookEntity>>
 
+    //limit
+    @Query("SELECT * FROM book_basket_database LIMIT :limit")
+    fun getLimitedBooks(limit: Int): LiveData<List<BookEntity>>
+
     // Veritabanında favori olarak işaretlenmiş tüm kitapları döner.
     @Query("SELECT * FROM book_basket_database WHERE is_favorite = 1")
     fun getFavoriteBooks(): LiveData<List<BookEntity>>
