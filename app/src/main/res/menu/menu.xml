@@ -12,4 +12,5 @@
         android:title="Favourites"
         android:titleTextAppearance="@style/BottomNavTextStyle"
         android:icon="@drawable/baseline_favorite_24"/>
+
 </menu>

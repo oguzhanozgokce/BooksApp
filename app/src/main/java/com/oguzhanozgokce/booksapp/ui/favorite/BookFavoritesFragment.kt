@@ -9,12 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
+import com.oguzhanozgokce.booksapp.databinding.FragmentBookFavoritesBinding
 import com.oguzhanozgokce.booksapp.databinding.FragmentBooksBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class BookFavoritesFragment : Fragment() {
-    private var _binding: FragmentBooksBinding? = null
+    private var _binding: FragmentBookFavoritesBinding? = null
     private val binding get() = _binding!!
     private val viewModel: FavoritesViewModel by viewModels()
     private lateinit var adapter: BookFavoritesAdapter
@@ -23,7 +24,7 @@ class BookFavoritesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentBooksBinding.inflate(inflater, container, false)
+        _binding = FragmentBookFavoritesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -44,7 +45,7 @@ class BookFavoritesFragment : Fragment() {
         }
 
         viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            binding.progressBarId.visibility = if (isLoading) View.VISIBLE else View.GONE
         }
 
         viewModel.error.observe(viewLifecycleOwner) { error ->

@@ -36,10 +36,10 @@ class RoomModule {
             .build()
     }
 
-
     @Provides
     @Singleton
     fun provideBookBasketDao(
         db: BookDB
     ) = db.bookBasketDaoInstance()
+
 }

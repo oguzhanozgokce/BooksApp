@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.oguzhanozgokce.booksapp.R
 import com.oguzhanozgokce.booksapp.databinding.ActivityMainBinding
 import com.oguzhanozgokce.booksapp.ui.books.BooksViewModel
@@ -32,25 +35,17 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        window.statusBarColor = ContextCompat.getColor(this, R.color.dark_blue)
+
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        binding.bottomNavigationView.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.booksFragment -> {
-                    navController.navigate(R.id.booksFragment)
-                    true
-                }
-                R.id.bookFavoritesFragment -> {
-                    navController.navigate(R.id.bookFavoritesFragment)
-                    true
-                }
-                else -> false
-            }
-        }
+
+        val navView: BottomNavigationView = findViewById(R.id.bottomNavigationView)
+        navView.setupWithNavController(navController)
+
 
     }
-
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }

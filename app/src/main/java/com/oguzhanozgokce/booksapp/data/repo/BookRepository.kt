@@ -39,7 +39,6 @@ class BookRepository @Inject constructor(
             Result.failure(e)
         }
     }
-
     fun getLimitedBooks(limit: Int): LiveData<List<BookEntity>> {
         val booksLiveData = bookDao.getLimitedBooks(limit)
         booksLiveData.observeForever { books ->
@@ -47,7 +46,6 @@ class BookRepository @Inject constructor(
         }
         return booksLiveData
     }
-
     fun getAllBooks(): LiveData<List<BookEntity>> {
         return bookDao.getAllBooks()
     }

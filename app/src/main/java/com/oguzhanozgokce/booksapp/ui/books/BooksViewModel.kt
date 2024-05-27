@@ -31,7 +31,7 @@ class BooksViewModel @Inject constructor(
         fetchBooks()
     }
 
-    fun fetchBooks() {
+    private fun fetchBooks() {
         _isLoading.value = true
         viewModelScope.launch {
             val result = repository.fetchBooksFromApi()
@@ -46,40 +46,21 @@ class BooksViewModel @Inject constructor(
             )
         }
     }
-
     fun getLimitedBooks(limit: Int) {
         _isLoading.value = true
         viewModelScope.launch {
             repository.getLimitedBooks(limit).observeForever { books ->
                 _limitedBooks.value = books
                 _isLoading.value = false
-                Log.d("BooksViewModel", "Limited books size: ${books.size}")
+                Log.e("BooksViewModel", "Limited books size: ${books.size}")
             }
         }
     }
-
-
-    fun getAllBooks(): LiveData<List<BookEntity>> {
-        return repository.getAllBooks()
-    }
-
-    // Veritabanındaki favori kitapları dönen fonksiyon
-    fun getFavoriteBooks(): LiveData<List<BookEntity>> {
-        return repository.getFavoriteBooks()
-    }
-
     // Kitabı favorilere ekleyen veya favorilerden çıkaran fonksiyon
     fun toggleFavorite(book: BookEntity) {
         viewModelScope.launch {
             val updatedBook = book.copy(isFavorite = !book.isFavorite)
             repository.updateBook(updatedBook)
-        }
-    }
-
-    // Kitabı veritabanından silen fonksiyon
-    fun deleteBook(book: BookEntity) {
-        viewModelScope.launch {
-            repository.deleteBook(book)
         }
     }
 }

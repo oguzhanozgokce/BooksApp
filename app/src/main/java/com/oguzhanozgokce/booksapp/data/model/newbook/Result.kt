@@ -1,4 +1,4 @@
-package com.oguzhanozgokce.booksapp.data.model
+package com.oguzhanozgokce.booksapp.data.model.newbook
 
 data class Result(
     val fiyat: String,
